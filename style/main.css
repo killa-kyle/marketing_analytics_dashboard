@@ -1,0 +1,66 @@
+body {
+  background: #f4f4f4;
+  width: 1920px;
+  height: 1080px;
+  border: 2px solid #2a5781;
+  font-family: proxima-nova, "proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+.channels-table {
+  font-size: 2em; }
+
+.page-header {
+  border: none; }
+
+.active-users-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%; }
+  .active-users-container .ActiveUsers {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    font-size: 2em; }
+  .active-users-container .ActiveUsers-value {
+    display: block; }
+
+.Chartjs, table {
+  background: #fff; }
+
+.Chartjs {
+  border: 1px solid #eee; }
+
+.Chartjs h3 {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 0.5em; }
+
+.thead-inverse th {
+  background: #2a5781 !important;
+  font-weight: 100;
+  font-size: 1em; }
+  .thead-inverse th span {
+    display: block;
+    font-size: 0.5em; }
+
+.channel-row span {
+  font-size: 0.7em;
+  font-weight: 600;
+  color: #2a5781;
+  margin: 0 5px; }

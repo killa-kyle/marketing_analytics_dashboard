@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TEI - Marketing Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="style/main.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-header text-center">Marketing</h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <table class="channels-table table table-striped table-bordered table-condensed" id="channels">    
+        <thead class="thead-inverse">
+            <tr>
+                <th>Channel</th>
+                <th>This Week <span>(sessions | conversions | rate) </span></th>
+                <th>Last Week</th>
+                <th>Last Month</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div id="active-users-container" class="active-users-container"></div>
+        </div>
+        <div class="col-md-8">
+            <div id="regions_div" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+    <div class="row hidden">
+        <div class="col-md-6">
+            <div class="Chartjs">
+              <h3>Top Channels (by sessions)</h3>
+              <figure class="Chartjs-figure" id="chart-4-container"></figure>
+              <ol class="Chartjs-legend" id="legend-4-container"></ol>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="Chartjs">
+              <h3>Top Browsers (by pageview)</h3>
+              <figure class="Chartjs-figure" id="chart-3-container"></figure>
+              <ol class="Chartjs-legend" id="legend-3-container"></ol>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="Chartjs">
+              <h3>This Year vs Last Year (by users)</h3>
+              <figure class="Chartjs-figure" id="chart-2-container"></figure>
+              <ol class="Chartjs-legend" id="legend-2-container"></ol>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="Chartjs">
+              <h3>This Week vs Last Week (by sessions)</h3>
+              <figure class="Chartjs-figure" id="chart-1-container"></figure>
+              <ol class="Chartjs-legend" id="legend-1-container"></ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-md-12">
+            <div id="embed-api-auth-container"></div>
+        </div>
+        <div class="col-md-6 hidden">
+            <div id="view-selector-container"></div>
+            <div id="view-name"></div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+<script>
+(function(w,d,s,g,js,fs){
+  g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
+  js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
+  js.src='https://apis.google.com/js/platform.js';
+  fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
+}(window,document,'script'));
+</script>
+
+<script type="text/javascript">
+      google.charts.load('upcoming', {'packages':['geochart']});
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Popularity'],
+          ['Germany', 200],
+          ['United States', 300],
+          ['Brazil', 400],
+          ['Canada', 500],
+          ['France', 600],
+          ['RU', 700]
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+<!-- This demo uses the Chart.js graphing library and Moment.js to do date
+     formatting and manipulation. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/owl.carousel.min.js"></script>
+
+
+<!-- Include the ViewSelector2 component script. -->
+<script src="https://ga-dev-tools.appspot.com/public/javascript/embed-api/components/view-selector2.js"></script>
+
+<!-- Include the DateRangeSelector component script. -->
+<script src="https://ga-dev-tools.appspot.com/public/javascript/embed-api/components/date-range-selector.js"></script>
+
+<!-- Include the ActiveUsers component script. -->
+<script src="https://ga-dev-tools.appspot.com/public/javascript/embed-api/components/active-users.js"></script>
+
+<!-- Include the CSS that styles the charts. -->
+<link rel="stylesheet" href="https://ga-dev-tools.appspot.com/public/css/chartjs-visualizations.css">
+
+
+
+<script src="main.js"></script>
+</body>
+</html>

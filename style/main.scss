@@ -1,0 +1,64 @@
+$tei-primary: #2a5781;
+body {
+    background: #f4f4f4;    
+    width: 1920px;
+    height: 1080px;
+    border: 2px solid $tei-primary;
+    font-family: proxima-nova, "proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.channels-table {
+    font-size: 2em;
+}
+
+.page-header {
+    border: none;    
+}
+.active-users-container {
+    display: flex;
+    width: 100%;
+
+    .ActiveUsers {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+    }
+    .ActiveUsers-value {
+        display: block;
+    }
+}
+.Chartjs, table {
+    background: #fff;
+}
+
+.Chartjs {
+    // padding: 5px;
+    border: 1px solid #eee;
+    // margin-bottom: 5px;
+}
+.Chartjs h3 {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.thead-inverse th{
+    background: $tei-primary !important;
+    font-weight: 100;
+    font-size: 1em;
+    span {
+        display: block;
+        font-size: 0.5em;
+    }
+}
+
+.channel-row {
+    span {
+        font-size: 0.7em;
+        font-weight: 600;
+        color: $tei-primary;
+        margin: 0 5px;
+    }
+}
