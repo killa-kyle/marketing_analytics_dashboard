@@ -71,19 +71,64 @@ function getTopActivePages(data){
          
          ACTIVE_USERS_MAP.init(results);
          
-         $('.active-pages').html('');
-         console.log(results);
-         for (var i = results.length - 1; i >= 0; i--) {
+         
+
+         //update top active pages 
+         $('.active-pages').html('');         
+         var pages = [];
+         $.each(results, function(index, val) {            
+            pages.push(val[0])            
+         });
+         var compressed_pages = compressArray(pages);
+         console.log(
+         compressed_pages.sort(function(a,b){
+          return parseFloat(a.count) - parseFloat(b.count);
+         }))
+
+         for (var i = compressed_pages.length - 1; i >= 0; i--) {
            $('.active-pages').append(
-              '<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+results[i][1]+'">'+results[i][0]+'</a>'
+              '<a class="list-group-item" target="_blank" href="#">'+compressed_pages[i].value+' - ' +compressed_pages[i].count+'</a>'
               );
          }
       });
 }
 /*
-Draw the map
+Compress array function
 
 */
+function compressArray(original) {
+ 
+  var compressed = [];
+  // make a copy of the input array
+  var copy = original.slice(0);
+ 
+  // first loop goes over every element
+  for (var i = 0; i < original.length; i++) {
+ 
+    var myCount = 0;  
+    // loop over every element in the copy and see if it's the same
+    for (var w = 0; w < copy.length; w++) {
+      if (original[i] == copy[w]) {
+        // increase amount of times duplicate is found
+        myCount++;
+        // sets item to undefined
+        delete copy[w];
+      }
+    }
+ 
+    if (myCount > 0) {
+      var a = new Object();
+      a.value = original[i];
+      a.count = myCount;
+      compressed.push(a);
+    }
+  }
+ 
+  return compressed;
+};
+
+
+
 
   /**
    * Update the activeUsers component, the Chartjs charts, and the dashboard

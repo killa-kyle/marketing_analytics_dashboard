@@ -38,14 +38,14 @@ var ACTIVE_USERS_MAP = (function(){
 
 
           var options = {
-            colorAxis: {colors: ['#e7711c', '#4374e0']}, // orange to blue
+            colorAxis: {colors: ['#e7711b', '#2a5781']}, // orange to blue
             legend: 'none',    
             // backgroundColor: {fill:'transparent',stroke:'#FFF' ,strokeWidth:0 },    
             datalessRegionColor: '#f5f5f5',
             displayMode: 'markers', 
             enableRegionInteractivity: 'true', 
             resolution: 'countries',
-            sizeAxis: {minValue: 1, maxValue:10,minSize:5,  maxSize: 10},
+            sizeAxis: {minValue: 1, maxValue:40,minSize:10,  maxSize: 20},
             region:'auto',
             keepAspectRatio: true,
             tooltip: {textStyle: {color: '#444444'}}    
