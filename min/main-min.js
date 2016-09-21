@@ -1,1 +1,317 @@
-gapi.analytics.ready(function(){function t(t){gapi.client.analytics.data.realtime.get({ids:t.ids,metrics:"rt:activeUsers",dimensions:"rt:pageTitle,rt:pagePath,rt:latitude,rt:longitude,rt:region,rt:country"}).then(function(t){var e=t.result.rows;ACTIVE_USERS_MAP.init(e),$(".active-pages").html("");for(var a=e.length-1;a>=0;a--)$(".active-pages").append('<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+e[a][1]+'">'+e[a][0]+" - "+e[a][6]+"</a>")})}function e(t){var e=moment(),a=n({ids:t,dimensions:"ga:channelGrouping",metrics:"ga:sessions,ga:goal1ConversionRate,ga:goal1Completions",sort:"-ga:sessions","start-date":moment(e).subtract(1,"day").day(0).format("YYYY-MM-DD"),"end-date":moment(e).format("YYYY-MM-DD")}),o=n({ids:t,dimensions:"ga:channelGrouping",metrics:"ga:sessions,ga:goal1ConversionRate,ga:goal1Completions",sort:"-ga:sessions","start-date":moment(e).subtract(1,"day").day(0).subtract(1,"week").format("YYYY-MM-DD"),"end-date":moment(e).subtract(1,"day").day(6).subtract(1,"week").format("YYYY-MM-DD")}),r=n({ids:t,dimensions:"ga:channelGrouping",metrics:"ga:sessions,ga:goal1ConversionRate,ga:goal1Completions",sort:"-ga:sessions","start-date":moment(e).subtract(1,"months").startOf("month").format("YYYY-MM-DD"),"end-date":moment(e).subtract(1,"months").endOf("month").format("YYYY-MM-DD")});Promise.all([a,o,r]).then(function(t){console.log("query dates:",t[0].query["start-date"]),console.log("query dates:",t[0].query["end-date"]);var e=t[0].rows.map(function(t){return t}),a=t[1].rows.map(function(t){return t}),n=t[2].rows.map(function(t){return t});$(".this-week-date-header").html(moment(t[0].query["start-date"]).format("MM/DD/YY")+" - "+moment(t[0].query["end-date"]).format("MM/DD/YY"));var o=new Array(3);o[0]=e,o[1]=a,o[2]=n;for(var r=0,s=0,i=0,c=0;c<o[0].length;c++){var l=o[0][c][0],d=parseInt(o[0][c][1]),m=parseFloat(o[0][c][2]).toFixed(2),g=parseInt(o[0][c][3]),u=parseInt(o[1][c][1]),p=parseFloat(o[1][c][2]).toFixed(2),f=parseInt(o[1][c][3]),h=parseInt(o[2][c][1]),Y=parseFloat(o[2][c][2]).toFixed(2),v=parseInt(o[2][c][3]);r+=d,s+=u,i+=h,console.log(r),$("#channels").append('<tr class="channel-row"><td>'+l+"</td><td>"+d.toLocaleString()+"<span> ("+g+") ("+m+"%)</span></td><td>"+u.toLocaleString()+"<span> ("+f+") ("+p+"%)</span></td><td>"+h.toLocaleString()+"<span> ("+v+") ("+Y+"%)</span></td></tr>")}$("#channels").append("<tr><td><strong>TOTAL:</strong></td><td><strong>"+r.toLocaleString()+"<strong></td><td><strong>"+s.toLocaleString()+"<strong></td><td><strong>"+i.toLocaleString()+"<strong></td></tr>")})}function a(t){var e=moment(),a=n({ids:t,dimensions:"ga:date,ga:nthDay",metrics:"ga:sessions","start-date":moment(e).subtract(1,"day").day(0).format("YYYY-MM-DD"),"end-date":moment(e).format("YYYY-MM-DD")}),s=n({ids:t,dimensions:"ga:date,ga:nthDay",metrics:"ga:sessions","start-date":moment(e).subtract(1,"day").day(0).subtract(1,"week").format("YYYY-MM-DD"),"end-date":moment(e).subtract(1,"day").day(6).subtract(1,"week").format("YYYY-MM-DD")});Promise.all([a,s]).then(function(t){var e=t[0].rows.map(function(t){return+t[2]}),a=t[1].rows.map(function(t){return+t[2]}),n=t[1].rows.map(function(t){return+t[0]});n=n.map(function(t){return moment(t,"YYYYMMDD").format("ddd")});var s={labels:n,datasets:[{label:"Last Week",fillColor:"rgba(220,220,220,0.5)",strokeColor:"rgba(220,220,220,1)",pointColor:"rgba(220,220,220,1)",pointStrokeColor:"#fff",data:a},{label:"This Week",fillColor:"rgba(151,187,205,0.5)",strokeColor:"rgba(151,187,205,1)",pointColor:"rgba(151,187,205,1)",pointStrokeColor:"#fff",data:e}]};new Chart(o("chart-1-container")).Line(s),r("legend-1-container",s.datasets)})}function n(t){return new Promise(function(e,a){var n=new gapi.analytics.report.Data({query:t});n.once("success",function(t){e(t)}).once("error",function(t){a(t)}).execute()})}function o(t){var e=document.getElementById(t),a=document.createElement("canvas"),n=a.getContext("2d");return e.innerHTML="",a.width=e.offsetWidth,a.height=e.offsetHeight,e.appendChild(a),n}function r(t,e){var a=document.getElementById(t);a.innerHTML=e.map(function(t){var e=t.color||t.fillColor,a=t.label;return'<li><i style="background:'+e+'"></i>'+a+"</li>"}).join("")}gapi.analytics.auth.authorize({container:"embed-api-auth-container",clientid:"476592068856-ki5v355o2t1pthp0h73s6bgddm3v0i80.apps.googleusercontent.com"});var s=new gapi.analytics.ext.ActiveUsers({container:"active-users-container",pollingInterval:5});s.once("success",function(){var t=this.container.firstChild,e;this.on("change",function(t){var a=this.container.firstChild,n=t.delta>0?"is-increasing":"is-decreasing";a.className+=" "+n,clearTimeout(e),e=setTimeout(function(){a.className=a.className.replace(/ is-(increasing|decreasing)/g,"")},3e3)})});var i=new gapi.analytics.ext.ViewSelector2({container:"view-selector-container"}).execute();i.on("viewChange",function(a){var n=document.getElementById("view-name");n.innerHTML=a.property.name+" ("+a.view.name+")",s.set(a).execute(),e(a.ids),t(a),setInterval(function(){t(a)},15e3)}),Chart.defaults.global.animationSteps=60,Chart.defaults.global.animationEasing="easeInOutQuart",Chart.defaults.global.responsive=!0,Chart.defaults.global.maintainAspectRatio=!1});
+gapi.analytics.ready(function() {
+
+  /**
+   * Authorize the user immediately if the user has already granted access.
+   * If no access has been created, render an authorize button inside the
+   * element with the ID "embed-api-auth-container".
+   */
+  gapi.analytics.auth.authorize({
+    container: 'embed-api-auth-container',
+    clientid: '476592068856-ki5v355o2t1pthp0h73s6bgddm3v0i80.apps.googleusercontent.com'
+  });
+
+
+  /**
+   * Create a new ActiveUsers instance to be rendered inside of an
+   * element with the id "active-users-container" and poll for changes every
+   * five seconds.
+   */
+  var activeUsers = new gapi.analytics.ext.ActiveUsers({
+    container: 'active-users-container',
+    pollingInterval: 5
+  });
+
+
+  /**
+   * Add CSS animation to visually show the when users come and go.
+   */
+  activeUsers.once('success', function() {
+    var element = this.container.firstChild;
+    var timeout;
+
+    this.on('change', function(data) {
+      var element = this.container.firstChild;
+      var animationClass = data.delta > 0 ? 'is-increasing' : 'is-decreasing';
+      element.className += (' ' + animationClass);
+
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        element.className =
+            element.className.replace(/ is-(increasing|decreasing)/g, '');
+      }, 3000);
+    });
+  });
+
+
+  /**
+   * Create a new ViewSelector2 instance to be rendered inside of an
+   * element with the id "view-selector-container".
+   */
+  var viewSelector = new gapi.analytics.ext.ViewSelector2({
+    container: 'view-selector-container',
+  })
+  .execute();
+
+
+
+/**
+*  GET ACTIVE PAGES
+*/
+
+function getTopActivePages(data){
+  gapi.client.analytics.data.realtime
+      .get({
+        ids: data.ids,
+        metrics: 'rt:activeUsers',
+        dimensions: 'rt:pageTitle,rt:pagePath,rt:latitude,rt:longitude,rt:region,rt:country',
+        // 'max-results': 8,      
+      })
+      .then(function(response) {         
+         var results = response.result.rows;         
+         
+         ACTIVE_USERS_MAP.init(results);
+         
+         $('.active-pages').html('');
+         console.log(results);
+         for (var i = results.length - 1; i >= 0; i--) {
+           $('.active-pages').append(
+              '<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+results[i][1]+'">'+results[i][0]+'</a>'
+              );
+         }
+      });
+}
+/*
+Draw the map
+
+*/
+
+  /**
+   * Update the activeUsers component, the Chartjs charts, and the dashboard
+   * title whenever the user changes the view.
+   */
+  viewSelector.on('viewChange', function(data) {
+    var title = document.getElementById('view-name');
+    title.innerHTML = data.property.name + ' (' + data.view.name + ')';
+
+    // Start tracking active users for this view.
+    activeUsers.set(data).execute();
+
+    // Render all the of charts for this view.
+    // renderWeekOverWeekChart(data.ids);
+    // renderYearOverYearChart(data.ids);
+    // renderTopBrowsersChart(data.ids);
+    renderTopChannelsTable(data.ids);
+    getTopActivePages(data);
+    setInterval(function(){
+      getTopActivePages(data);
+      // updateThisWeek(data.ids);
+    },15000);
+
+
+  });
+
+
+
+
+
+
+ 
+  function renderTopChannelsTable(ids) {
+    //cache moment object for query times
+    var now = moment(); // .subtract(3, 'day');
+    
+    //table row queries 
+    var thisWeek = query({
+      'ids': ids,
+      'dimensions': 'ga:channelGrouping',
+      'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
+      'sort': '-ga:sessions',
+      'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+      'end-date': moment(now).format('YYYY-MM-DD'),      
+    });
+
+    var lastWeek = query({
+      'ids': ids,
+      'dimensions': 'ga:channelGrouping',
+      'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
+      'sort': '-ga:sessions',
+      'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
+          .format('YYYY-MM-DD'),
+      'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
+          .format('YYYY-MM-DD'),
+    });
+
+
+    var lastMonth = query({
+      'ids': ids,
+      'dimensions': 'ga:channelGrouping',
+      'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
+      'sort': '-ga:sessions',
+      'start-date': moment(now).subtract(1,'months').startOf('month').format('YYYY-MM-DD'),
+      'end-date': moment(now).subtract(1, 'months').endOf('month').format('YYYY-MM-DD'),
+    });
+
+    // console.log(thisWeek,lastWeek,lastMonth);
+    
+    Promise.all([thisWeek, lastWeek,lastMonth]).then(function(results) {
+      var thisWeekResults = results[0].rows.map(function(row){return row});
+      var lastWeekResults = results[1].rows.map(function(row){return row});
+      var lastMonthResults = results[2].rows.map(function(row){return row});
+
+      //update Date Header 
+      $('.this-week-date-header').html(
+        moment(results[0].query["start-date"]).format('MM/DD/YY')+
+        ' - '+
+        moment(results[0].query["end-date"]).format('MM/DD/YY')
+      );
+
+      // console.log(thisWeekResults);
+      // console.log(lastWeekResults);
+
+      // build multi-array to fill table 
+      var tableResults = new Array(3);
+      tableResults[0] = thisWeekResults;
+      tableResults[1] = lastWeekResults;
+      tableResults[2] = lastMonthResults;
+
+      var thisWeekTotal = 0;
+      var lastWeekTotal = 0;
+      var lastMonthTotal = 0;
+
+      
+
+      for(var i = 0; i < tableResults[0].length; i++){
+        
+        var channelName = tableResults[0][i][0];
+        
+        var thisWeek = parseInt(tableResults[0][i][1]);
+        var thisWeekRate = parseFloat(tableResults[0][i][2]).toFixed(2);        
+        var thisWeekCompletions = parseInt(tableResults[0][i][3]);
+
+        var lastWeek = parseInt(tableResults[1][i][1]);
+        var lastWeekRate = parseFloat(tableResults[1][i][2]).toFixed(2);        
+        var lastWeekCompletions = parseInt(tableResults[1][i][3]);
+
+        var lastMonth = parseInt(tableResults[2][i][1]);
+        var lastMonthRate = parseFloat(tableResults[2][i][2]).toFixed(2);        
+        var lastMonthCompletions = parseInt(tableResults[2][i][3]);
+
+        // add to total       
+        thisWeekTotal = thisWeekTotal + thisWeek;
+        lastWeekTotal = lastWeekTotal + lastWeek;
+        lastMonthTotal = lastMonthTotal + lastMonth;        
+
+        // build table;
+        $('#channels').append('<tr class="channel-row">'+ 
+          '<td>'+channelName+'</td>'+
+              '<td>'+thisWeek.toLocaleString()+'<span> ('+thisWeekCompletions+') ('+thisWeekRate+'%)</span></td>'+
+              '<td>'+lastWeek.toLocaleString()+'<span> ('+lastWeekCompletions+') ('+lastWeekRate+'%)</span></td>'+
+              '<td>'+lastMonth.toLocaleString()+'<span> ('+lastMonthCompletions+') ('+lastMonthRate+'%)</span></td>'+
+          '</tr>');
+      }
+
+     
+     // build total row
+      $('#channels').append(
+        '<tr>'+
+                '<td><strong>TOTAL:</strong></td>'+
+                '<td><strong>'+thisWeekTotal.toLocaleString()+'<strong></td>'+
+                '<td><strong>'+lastWeekTotal.toLocaleString()+'<strong></td>'+
+                '<td><strong>'+lastMonthTotal.toLocaleString()+'<strong></td>'+
+        '</tr>');
+    });
+  }
+
+// function updateThisWeek(ids){
+  
+//   var now = moment(); // .subtract(3, 'day');
+  
+//   //table row queries 
+//   var thisWeek = query({
+//     'ids': ids,
+//     'dimensions': 'ga:channelGrouping',
+//     'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
+//     'sort': '-ga:sessions',
+//     'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+//     'end-date': moment(now).format('YYYY-MM-DD'),      
+//   });
+
+//   Promise.all([thisWeek]).then(function(results) {
+    
+    
+//     var thisWeekResults = results[0].rows.map(function(row){return row});
+//     console.log(thisWeekResults);
+//     for(var i = 0; i < thisWeekResults.length; i++){
+
+//       $('.channels-table td:nth-child(2)').eac(thisWeekResults[i][1]);
+//     }
+    
+//   });
+// }
+
+
+
+
+
+
+
+  /**
+   * Extend the Embed APIs `gapi.analytics.report.Data` component to
+   * return a promise the is fulfilled with the value returned by the API.
+   * @param {Object} params The request parameters.
+   * @return {Promise} A promise.
+   */
+  function query(params) {
+    return new Promise(function(resolve, reject) {
+      var data = new gapi.analytics.report.Data({query: params});
+      data.once('success', function(response) { resolve(response); })
+          .once('error', function(response) { reject(response); })
+          .execute();
+    });
+  }
+
+
+  /**
+   * Create a new canvas inside the specified element. Set it to be the width
+   * and height of its container.
+   * @param {string} id The id attribute of the element to host the canvas.
+   * @return {RenderingContext} The 2D canvas context.
+   */
+  function makeCanvas(id) {
+    var container = document.getElementById(id);
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+
+    container.innerHTML = '';
+    canvas.width = container.offsetWidth;
+    canvas.height = container.offsetHeight;
+    container.appendChild(canvas);
+
+    return ctx;
+  }
+
+
+  /**
+   * Create a visual legend inside the specified element based off of a
+   * Chart.js dataset.
+   * @param {string} id The id attribute of the element to host the legend.
+   * @param {Array.<Object>} items A list of labels and colors for the legend.
+   */
+  function generateLegend(id, items) {
+    var legend = document.getElementById(id);
+    legend.innerHTML = items.map(function(item) {
+      var color = item.color || item.fillColor;
+      var label = item.label;
+      return '<li><i style="background:' + color + '"></i>' + label + '</li>';
+    }).join('');
+  }
+
+
+  // Set some global Chart.js defaults.
+  Chart.defaults.global.animationSteps = 60;
+  Chart.defaults.global.animationEasing = 'easeInOutQuart';
+  Chart.defaults.global.responsive = true;
+  Chart.defaults.global.maintainAspectRatio = false;
+
+});
+
