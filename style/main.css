@@ -82,15 +82,16 @@ body {
     content: ")"; }
 
 .list-group {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column; }
+  padding: 0 20px;
+  height: 330px;
+  overflow: hidden; }
+  .list-group .list-group-item span {
+    float: right;
+    font-weight: 700;
+    color: #2a5781;
+    font-size: 1.3em;
+    display: block;
+    margin-left: 50px; }
 
 header {
   background: #1d3d5b;

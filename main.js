@@ -87,7 +87,7 @@ function getTopActivePages(data){
 
          for (var i = compressed_pages.length - 1; i >= 0; i--) {
            $('.active-pages').append(
-              '<a class="list-group-item" target="_blank" href="#">'+compressed_pages[i].value+' - ' +compressed_pages[i].count+'</a>'
+              '<a class="list-group-item" target="_blank" href="#">'+compressed_pages[i].value+' <span>' +compressed_pages[i].count+'</span></a>'
               );
          }
       });
