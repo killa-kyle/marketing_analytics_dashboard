@@ -68,14 +68,15 @@ function getTopActivePages(data){
       })
       .then(function(response) {         
          var results = response.result.rows;         
+         
          ACTIVE_USERS_MAP.init(results);
-
+         
          $('.active-pages').html('');
-
+         console.log(results);
          for (var i = results.length - 1; i >= 0; i--) {
            $('.active-pages').append(
-              '<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+results[i][1]+'">'+results[i][0]+' - ' + results[i][6] + '</a>'
-              )
+              '<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+results[i][1]+'">'+results[i][0]+'</a>'
+              );
          }
       });
 }
@@ -103,6 +104,7 @@ Draw the map
     getTopActivePages(data);
     setInterval(function(){
       getTopActivePages(data);
+      // updateThisWeek(data.ids);
     },15000);
 
 
@@ -113,11 +115,7 @@ Draw the map
 
 
 
-  /**
-   * Draw the a chart.js doughnut chart with data from the specified view that
-   * compares sessions from mobile, desktop, and tablet over the past seven
-   * days.
-   */
+ 
   function renderTopChannelsTable(ids) {
     //cache moment object for query times
     var now = moment(); // .subtract(3, 'day');
@@ -143,6 +141,7 @@ Draw the map
           .format('YYYY-MM-DD'),
     });
 
+
     var lastMonth = query({
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
@@ -155,8 +154,6 @@ Draw the map
     // console.log(thisWeek,lastWeek,lastMonth);
     
     Promise.all([thisWeek, lastWeek,lastMonth]).then(function(results) {
-      console.log("query dates:",results[0].query["start-date"]);
-      console.log("query dates:",results[0].query["end-date"]);
       var thisWeekResults = results[0].rows.map(function(row){return row});
       var lastWeekResults = results[1].rows.map(function(row){return row});
       var lastMonthResults = results[2].rows.map(function(row){return row});
@@ -202,8 +199,7 @@ Draw the map
         // add to total       
         thisWeekTotal = thisWeekTotal + thisWeek;
         lastWeekTotal = lastWeekTotal + lastWeek;
-        lastMonthTotal = lastMonthTotal + lastMonth;
-        console.log(thisWeekTotal);
+        lastMonthTotal = lastMonthTotal + lastMonth;        
 
         // build table;
         $('#channels').append('<tr class="channel-row">'+ 
@@ -226,69 +222,37 @@ Draw the map
     });
   }
 
+// function updateThisWeek(ids){
+  
+//   var now = moment(); // .subtract(3, 'day');
+  
+//   //table row queries 
+//   var thisWeek = query({
+//     'ids': ids,
+//     'dimensions': 'ga:channelGrouping',
+//     'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
+//     'sort': '-ga:sessions',
+//     'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+//     'end-date': moment(now).format('YYYY-MM-DD'),      
+//   });
+
+//   Promise.all([thisWeek]).then(function(results) {
+    
+    
+//     var thisWeekResults = results[0].rows.map(function(row){return row});
+//     console.log(thisWeekResults);
+//     for(var i = 0; i < thisWeekResults.length; i++){
+
+//       $('.channels-table td:nth-child(2)').eac(thisWeekResults[i][1]);
+//     }
+    
+//   });
+// }
 
 
 
 
-  function ChannelBreakdownChart(ids) {
 
-    // Adjust `now` to experiment with different days, for testing only...
-    var now = moment(); // .subtract(3, 'day');
-
-    var thisWeek = query({
-      'ids': ids,
-      'dimensions': 'ga:date,ga:nthDay',
-      'metrics': 'ga:sessions',
-      'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
-      'end-date': moment(now).format('YYYY-MM-DD')
-    });
-
-    var lastWeek = query({
-      'ids': ids,
-      'dimensions': 'ga:date,ga:nthDay',
-      'metrics': 'ga:sessions',
-      'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
-          .format('YYYY-MM-DD'),
-      'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
-          .format('YYYY-MM-DD')
-    });
-
-    Promise.all([thisWeek, lastWeek]).then(function(results) {
-
-      var data1 = results[0].rows.map(function(row) { return +row[2]; });
-      var data2 = results[1].rows.map(function(row) { return +row[2]; });
-      var labels = results[1].rows.map(function(row) { return +row[0]; });
-
-      labels = labels.map(function(label) {
-        return moment(label, 'YYYYMMDD').format('ddd');
-      });
-
-      var data = {
-        labels : labels,
-        datasets : [
-          {
-            label: 'Last Week',
-            fillColor : 'rgba(220,220,220,0.5)',
-            strokeColor : 'rgba(220,220,220,1)',
-            pointColor : 'rgba(220,220,220,1)',
-            pointStrokeColor : '#fff',
-            data : data2
-          },
-          {
-            label: 'This Week',
-            fillColor : 'rgba(151,187,205,0.5)',
-            strokeColor : 'rgba(151,187,205,1)',
-            pointColor : 'rgba(151,187,205,1)',
-            pointStrokeColor : '#fff',
-            data : data1
-          }
-        ]
-      };
-
-      new Chart(makeCanvas('chart-1-container')).Line(data);
-      generateLegend('legend-1-container', data.datasets);
-    });
-  }
 
 
   /**
