@@ -1,10 +1,20 @@
 $tei-primary: #2a5781;
+$tei-dark: #1d3d5b;
+$gray: rgb(221, 228, 233);
+
+.boxshadow {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+
+
+
 body {
     background: #f4f4f4;    
     width: 1920px;
     height: 1080px;
     border: 2px solid $tei-primary;
-    font-family: proxima-nova, "proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Roboto","proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .channels-table {
     font-size: 2em;
@@ -16,6 +26,7 @@ body {
 .active-users-container {
     display: flex;
     width: 100%;
+    height: 400px;
 
     .ActiveUsers {
         width: 100%;
@@ -23,14 +34,23 @@ body {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 2em;
+        font-size: 4em;
     }
+
     .ActiveUsers-value {
         display: block;
     }
 }
 .Chartjs, table {
-    background: #fff;
+    background: #fff;    
+}
+
+.dash-element {
+    @extend .boxshadow;
+    .dash-element-header {
+        margin: 0;
+        padding: 10px 0;
+    }
 }
 
 .Chartjs {
@@ -45,20 +65,60 @@ body {
 }
 
 .thead-inverse th{
-    background: $tei-primary !important;
-    font-weight: 100;
-    font-size: 1em;
+    // background: $gray !important;
+    color: $tei-primary;
+    font-weight: 600;
+    font-size: 1.2em;
     span {
         display: block;
         font-size: 0.5em;
     }
 }
 
-.channel-row {
+.channel-row {    
     span {
         font-size: 0.7em;
-        font-weight: 600;
+        font-weight: 400;
         color: $tei-primary;
         margin: 0 5px;
+    }
+}
+
+.this-week-date-header {
+    display: inline;
+    font-size: 0.8em;    
+    &:before {
+        content: "(";
+    };
+    &:after {
+        content: ")";
+    }
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    
+    .list-group-item {
+        
+    }
+}
+
+header {
+    background: $tei-dark;
+    color: #fff;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    padding: 0 2em;
+    height: 60px;
+    width: 100%;
+    margin-bottom: 1em;
+    justify-content: space-between;
+    .header-tei-logo {
+        width: 300px;
+    }
+    .header-text {
+        margin: 0;
     }
 }

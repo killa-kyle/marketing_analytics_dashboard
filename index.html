@@ -4,30 +4,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>TEI - Marketing Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+
 
     <link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
 <body>
 <header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="page-header text-center">Marketing</h1>
-            </div>
-        </div>
-    </div>
+  <img src="https://logintei.staging.wpengine.com/wp-content/themes/tei-dashboard/assets/dashboard-assets/images/login-logo-inverse.svg" alt="tei-logo" class="header-tei-logo">
+  <div class="header-text">
+    MARKETING ANALYTICS
+  </div>
 </header>
 
 <div class="container-fluid">
-    <table class="channels-table table table-striped table-bordered table-condensed" id="channels">    
+    <table class="channels-table table table-striped table-bordered table-condensed dash-element" id="channels">    
         <thead class="thead-inverse">
             <tr>
                 <th>Channel</th>
-                <th>This Week <span>(sessions | conversions | rate) </span></th>
-                <th>Last Week</th>
-                <th>Last Month</th>
+                <th>This Week <div class="this-week-date-header"></div> <span>(sessions | conversions | rate) </span></th>
+                <th>Last Week <span>(sessions | conversions | rate) </span></th>
+                <th>Last Month <span>(sessions | conversions | rate) </span></th>
             </tr>
         </thead>
         <tbody>
@@ -39,40 +37,21 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4">
-            <div id="active-users-container" class="active-users-container"></div>
+            <div id="active-users-container" class="active-users-container dash-element"></div>
         </div>
-        <div class="col-md-8">
-            <div id="regions_div" style="width: 100%; height: 400px;"></div>
-        </div>
-    </div>
-    <div class="row hidden">
-        <div class="col-md-6">
-            <div class="Chartjs">
-              <h3>Top Channels (by sessions)</h3>
-              <figure class="Chartjs-figure" id="chart-4-container"></figure>
-              <ol class="Chartjs-legend" id="legend-4-container"></ol>
+        <div class="col-md-4">
+        
+            <div id="active-pages-container" class="dash-element">
+            <h3 class="text-center dash-element-header">Top Active Pages</h3>
+              <div class="list-group active-pages ">
+                
+              </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="Chartjs">
-              <h3>Top Browsers (by pageview)</h3>
-              <figure class="Chartjs-figure" id="chart-3-container"></figure>
-              <ol class="Chartjs-legend" id="legend-3-container"></ol>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="Chartjs">
-              <h3>This Year vs Last Year (by users)</h3>
-              <figure class="Chartjs-figure" id="chart-2-container"></figure>
-              <ol class="Chartjs-legend" id="legend-2-container"></ol>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="Chartjs">
-              <h3>This Week vs Last Week (by sessions)</h3>
-              <figure class="Chartjs-figure" id="chart-1-container"></figure>
-              <ol class="Chartjs-legend" id="legend-1-container"></ol>
-            </div>
+        <div class="col-md-4">
+            
+            <div id="regions_div" style="width: 98%; height: 400px;border: 1px solid #ddd;"  class="dash-element"></div>
+
         </div>
     </div>
 </div>
@@ -95,7 +74,6 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
 <script>
 (function(w,d,s,g,js,fs){
   g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
@@ -106,27 +84,7 @@
 </script>
 
 <script type="text/javascript">
-      google.charts.load('upcoming', {'packages':['geochart']});
-      google.charts.setOnLoadCallback(drawRegionsMap);
 
-      function drawRegionsMap() {
-
-        var data = google.visualization.arrayToDataTable([
-          ['Country', 'Popularity'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Brazil', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 700]
-        ]);
-
-        var options = {};
-
-        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-
-        chart.draw(data, options);
-      }
     </script>
 
 <!-- This demo uses the Chart.js graphing library and Moment.js to do date
@@ -150,6 +108,7 @@
 
 
 
-<script src="main.js"></script>
+<script src="min/main-min.js"></script>
+<script src="min/map-min.js"></script>
 </body>
 </html>

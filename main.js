@@ -53,6 +53,37 @@ gapi.analytics.ready(function() {
   .execute();
 
 
+
+/**
+*  GET ACTIVE PAGES
+*/
+
+function getTopActivePages(data){
+  gapi.client.analytics.data.realtime
+      .get({
+        ids: data.ids,
+        metrics: 'rt:activeUsers',
+        dimensions: 'rt:pageTitle,rt:pagePath,rt:latitude,rt:longitude,rt:region,rt:country',
+        // 'max-results': 8,      
+      })
+      .then(function(response) {         
+         var results = response.result.rows;         
+         ACTIVE_USERS_MAP.init(results);
+
+         $('.active-pages').html('');
+
+         for (var i = results.length - 1; i >= 0; i--) {
+           $('.active-pages').append(
+              '<a class="list-group-item" target="_blank" href="https://www.theexpertinstitute.com'+results[i][1]+'">'+results[i][0]+' - ' + results[i][6] + '</a>'
+              )
+         }
+      });
+}
+/*
+Draw the map
+
+*/
+
   /**
    * Update the activeUsers component, the Chartjs charts, and the dashboard
    * title whenever the user changes the view.
@@ -65,231 +96,21 @@ gapi.analytics.ready(function() {
     activeUsers.set(data).execute();
 
     // Render all the of charts for this view.
-    renderWeekOverWeekChart(data.ids);
-    renderYearOverYearChart(data.ids);
-    renderTopBrowsersChart(data.ids);
-    renderTopChannelsChart(data.ids);
+    // renderWeekOverWeekChart(data.ids);
+    // renderYearOverYearChart(data.ids);
+    // renderTopBrowsersChart(data.ids);
+    renderTopChannelsTable(data.ids);
+    getTopActivePages(data);
+    setInterval(function(){
+      getTopActivePages(data);
+    },15000);
 
 
   });
 
 
-  /*
-  * Register plugin for displaying labels
-  */
-  Chart.pluginService.register({
-    beforeRender: function (chart) {
-      if (chart.config.options.showAllTooltips) {
-        // create an array of tooltips
-        // we can't use the chart tooltip because there is only one tooltip per chart
-        chart.pluginTooltips = [];
-        chart.config.data.datasets.forEach(function (dataset, i) {
-          chart.getDatasetMeta(i).data.forEach(function (sector, j) {
-            chart.pluginTooltips.push(new Chart.Tooltip({
-              _chart: chart.chart,
-              _chartInstance: chart,
-              _data: chart.data,
-              _options: chart.options,
-              _active: [sector]
-            }, chart));
-          });
-        });
-
-        // turn off normal tooltips
-        chart.options.tooltips.enabled = false;
-      }
-    },
-    afterDraw: function (chart, easing) {
-      if (chart.config.options.showAllTooltips) {
-        // we don't want the permanent tooltips to animate, so don't do anything till the animation runs atleast once
-        if (!chart.allTooltipsOnce) {
-          if (easing !== 1)
-            return;
-          chart.allTooltipsOnce = true;
-        }
-
-        // turn on tooltips
-        chart.options.tooltips.enabled = true;
-        Chart.helpers.each(chart.pluginTooltips, function (tooltip) {
-          tooltip.initialize();
-          tooltip.update();
-          // we don't actually need this since we are not animating tooltips
-          tooltip.pivot();
-          tooltip.transition(easing).draw();
-        });
-        chart.options.tooltips.enabled = false;
-      }
-    }
-  })
 
 
-  /**
-   * Draw the a chart.js line chart with data from the specified view that
-   * overlays session data for the current week over session data for the
-   * previous week.
-   */
-  function renderWeekOverWeekChart(ids) {
-
-    // Adjust `now` to experiment with different days, for testing only...
-    var now = moment(); // .subtract(3, 'day');
-
-    var thisWeek = query({
-      'ids': ids,
-      'dimensions': 'ga:date,ga:nthDay',
-      'metrics': 'ga:sessions',
-      'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
-      'end-date': moment(now).format('YYYY-MM-DD')
-    });
-
-    var lastWeek = query({
-      'ids': ids,
-      'dimensions': 'ga:date,ga:nthDay',
-      'metrics': 'ga:sessions',
-      'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
-          .format('YYYY-MM-DD'),
-      'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
-          .format('YYYY-MM-DD')
-    });
-
-    Promise.all([thisWeek, lastWeek]).then(function(results) {
-
-      var data1 = results[0].rows.map(function(row) { return +row[2]; });
-      var data2 = results[1].rows.map(function(row) { return +row[2]; });
-      var labels = results[1].rows.map(function(row) { return +row[0]; });      
-      labels = labels.map(function(label) {
-        return moment(label, 'YYYYMMDD').format('ddd');
-      });
-
-      // replace null future dates this week with 0 so chart displays
-      for (var i = 0; i < 7; i++) {
-        if(data1[i] == null || data1[i] == undefined){
-          data1[i] = 0;
-        }
-      }
-
-
-      var data = {
-        labels : labels,
-        datasets : [
-          {
-            label: 'Last Week',
-            fillColor : 'rgba(220,220,220,0.5)',
-            strokeColor : 'rgba(220,220,220,1)',
-            pointColor : 'rgba(220,220,220,1)',
-            pointStrokeColor : '#fff',
-            data : data2
-          },
-          {
-            label: 'This Week',
-            fillColor : 'rgba(151,187,205,0.5)',
-            strokeColor : 'rgba(151,187,205,1)',
-            pointColor : 'rgba(151,187,205,1)',
-            pointStrokeColor : '#fff',
-            data : data1
-          }
-        ]
-      };
-
-      new Chart(makeCanvas('chart-1-container')).Bar(data);
-      generateLegend('legend-1-container', data.datasets);
-    });
-  }
-
-
-  /**
-   * Draw the a chart.js bar chart with data from the specified view that
-   * overlays session data for the current year over session data for the
-   * previous year, grouped by month.
-   */
-  function renderYearOverYearChart(ids) {
-
-    // Adjust `now` to experiment with different days, for testing only...
-    var now = moment(); // .subtract(3, 'day');
-
-    var thisYear = query({
-      'ids': ids,
-      'dimensions': 'ga:month,ga:nthMonth',
-      'metrics': 'ga:users',
-      'start-date': moment(now).date(1).month(0).format('YYYY-MM-DD'),
-      'end-date': moment(now).format('YYYY-MM-DD')
-    });
-
-    var lastYear = query({
-      'ids': ids,
-      'dimensions': 'ga:month,ga:nthMonth',
-      'metrics': 'ga:users',
-      'start-date': moment(now).subtract(1, 'year').date(1).month(0)
-          .format('YYYY-MM-DD'),
-      'end-date': moment(now).date(1).month(0).subtract(1, 'day')
-          .format('YYYY-MM-DD')
-    });
-
-    Promise.all([thisYear, lastYear]).then(function(results) {
-      var data1 = results[0].rows.map(function(row) { return +row[2]; });
-      var data2 = results[1].rows.map(function(row) { return +row[2]; });
-      var labels = ['Jan','Feb','Mar','Apr','May','Jun',
-                    'Jul','Aug','Sep','Oct','Nov','Dec'];
-
-      // Ensure the data arrays are at least as long as the labels array.
-      // Chart.js bar charts don't (yet) accept sparse datasets.
-      for (var i = 0, len = labels.length; i < len; i++) {
-        if (data1[i] === undefined) data1[i] = null;
-        if (data2[i] === undefined) data2[i] = null;
-      }
-
-      var data = {
-        labels : labels,
-        datasets : [
-          {
-            label: 'Last Year',
-            fillColor : 'rgba(220,220,220,0.5)',
-            strokeColor : 'rgba(220,220,220,1)',
-            data : data2
-          },
-          {
-            label: 'This Year',
-            fillColor : 'rgba(151,187,205,0.5)',
-            strokeColor : 'rgba(151,187,205,1)',
-            data : data1
-          }
-        ]
-      };
-
-      new Chart(makeCanvas('chart-2-container')).Bar(data);
-      generateLegend('legend-2-container', data.datasets);
-    })
-    .catch(function(err) {
-      console.error(err.stack);
-    });
-  }
-
-
-  /**
-   * Draw the a chart.js doughnut chart with data from the specified view that
-   * show the top 5 browsers over the past seven days.
-   */
-  function renderTopBrowsersChart(ids) {
-
-    query({
-      'ids': ids,
-      'dimensions': 'ga:browser',
-      'metrics': 'ga:pageviews',
-      'sort': '-ga:pageviews',
-      'max-results': 5
-    })
-    .then(function(response) {
-
-      var data = [];
-      var colors = ['#4D5360','#949FB1','#D4CCC5','#E2EAE9','#F7464A'];
-
-      response.rows.forEach(function(row, i) {
-        data.push({ value: +row[1], color: colors[i], label: row[0] });
-      });
-
-      new Chart(makeCanvas('chart-3-container')).Doughnut(data);
-      generateLegend('legend-3-container', data);
-    });
-  }
 
 
   /**
@@ -297,51 +118,55 @@ gapi.analytics.ready(function() {
    * compares sessions from mobile, desktop, and tablet over the past seven
    * days.
    */
-  function renderTopChannelsChart(ids) {
-    // Adjust `now` to experiment with different days, for testing only...
+  function renderTopChannelsTable(ids) {
+    //cache moment object for query times
     var now = moment(); // .subtract(3, 'day');
-
-
-
-    // This week 
+    
+    //table row queries 
     var thisWeek = query({
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
       'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
       'sort': '-ga:sessions',
       'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
-      'end-date': moment(now).format('YYYY-MM-DD'),
-      'max-results': 7
+      'end-date': moment(now).format('YYYY-MM-DD'),      
     });
 
     var lastWeek = query({
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
-      'metrics': 'ga:sessions',
+      'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
       'sort': '-ga:sessions',
       'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
           .format('YYYY-MM-DD'),
       'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
           .format('YYYY-MM-DD'),
-      'max-results': 7
     });
 
     var lastMonth = query({
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
-      'metrics': 'ga:sessions',
+      'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
       'sort': '-ga:sessions',
       'start-date': moment(now).subtract(1,'months').startOf('month').format('YYYY-MM-DD'),
       'end-date': moment(now).subtract(1, 'months').endOf('month').format('YYYY-MM-DD'),
-      'max-results': 7
     });
-    console.log(thisWeek);
-    Promise.all([thisWeek, lastWeek,lastMonth]).then(function(results) {
 
+    // console.log(thisWeek,lastWeek,lastMonth);
+    
+    Promise.all([thisWeek, lastWeek,lastMonth]).then(function(results) {
+      console.log("query dates:",results[0].query["start-date"]);
+      console.log("query dates:",results[0].query["end-date"]);
       var thisWeekResults = results[0].rows.map(function(row){return row});
       var lastWeekResults = results[1].rows.map(function(row){return row});
       var lastMonthResults = results[2].rows.map(function(row){return row});
 
+      //update Date Header 
+      $('.this-week-date-header').html(
+        moment(results[0].query["start-date"]).format('MM/DD/YY')+
+        ' - '+
+        moment(results[0].query["end-date"]).format('MM/DD/YY')
+      );
 
       // console.log(thisWeekResults);
       // console.log(lastWeekResults);
@@ -351,60 +176,53 @@ gapi.analytics.ready(function() {
       tableResults[0] = thisWeekResults;
       tableResults[1] = lastWeekResults;
       tableResults[2] = lastMonthResults;
-      
 
-
-      var data = [];
-      var colors = ['#4D5360','#949FB1','#D4CCC5','#E2EAE9','#F7464A','#bada55','#e6711b'];
-
-
-
-      tableResults[0].forEach(function(row, i) {
-        // $('#channels').append('<tr>'+ 
-        //   '<td>'+row[0]+'</td>'+
-        //       '<td>'+row[1]+'</td>'+
-        //       '<td></td>'+
-        //       '<td></td>'+
-        //   '</tr>');
+      var thisWeekTotal = 0;
+      var lastWeekTotal = 0;
+      var lastMonthTotal = 0;
 
       
-        data.push({
-          label: row[0],
-          value: +row[1],
-          color: colors[i]
-        });
-      });
 
       for(var i = 0; i < tableResults[0].length; i++){
-        console.log('Channel Name:',tableResults[0][i][1].toLocaleString('en-US'));
+        
         var channelName = tableResults[0][i][0];
-        var thisWeek = parseInt(tableResults[0][i][1]).toLocaleString();
-        // var thisWeekRate = parseFloat(tableResults[0][i][2]);
-        var thisWeekCompletions = parseInt(tableResults[0][i][3]).toLocaleString();
-        var lastWeek = parseInt(tableResults[1][i][1]).toLocaleString();
-        var lastMonth = parseInt(tableResults[2][i][1]).toLocaleString();
+        
+        var thisWeek = parseInt(tableResults[0][i][1]);
+        var thisWeekRate = parseFloat(tableResults[0][i][2]).toFixed(2);        
+        var thisWeekCompletions = parseInt(tableResults[0][i][3]);
+
+        var lastWeek = parseInt(tableResults[1][i][1]);
+        var lastWeekRate = parseFloat(tableResults[1][i][2]).toFixed(2);        
+        var lastWeekCompletions = parseInt(tableResults[1][i][3]);
+
+        var lastMonth = parseInt(tableResults[2][i][1]);
+        var lastMonthRate = parseFloat(tableResults[2][i][2]).toFixed(2);        
+        var lastMonthCompletions = parseInt(tableResults[2][i][3]);
+
+        // add to total       
+        thisWeekTotal = thisWeekTotal + thisWeek;
+        lastWeekTotal = lastWeekTotal + lastWeek;
+        lastMonthTotal = lastMonthTotal + lastMonth;
+        console.log(thisWeekTotal);
+
+        // build table;
         $('#channels').append('<tr class="channel-row">'+ 
           '<td>'+channelName+'</td>'+
-              '<td>'+thisWeek+'<span>('+thisWeekCompletions+')(thisWeekRate)</span></td>'+
-              '<td>'+lastWeek+'</td>'+
-              '<td>'+lastMonth+'</td>'+
+              '<td>'+thisWeek.toLocaleString()+'<span> ('+thisWeekCompletions+') ('+thisWeekRate+'%)</span></td>'+
+              '<td>'+lastWeek.toLocaleString()+'<span> ('+lastWeekCompletions+') ('+lastWeekRate+'%)</span></td>'+
+              '<td>'+lastMonth.toLocaleString()+'<span> ('+lastMonthCompletions+') ('+lastMonthRate+'%)</span></td>'+
           '</tr>');
       }
-      // lastWeekResults.forEach(function(row, i) {
-      //   $('#channels tr:nth-child('+i+') td:nth-child(3)').html(row[1]);
-      //   // $('#channels tr td:nth-child(3)').html(row[1]);
-      // });
+
      
      // build total row
       $('#channels').append(
         '<tr>'+
                 '<td><strong>TOTAL:</strong></td>'+
-                '<td></td>'+
-                '<td></td>'+
-                '<td></td>'+
+                '<td><strong>'+thisWeekTotal.toLocaleString()+'<strong></td>'+
+                '<td><strong>'+lastWeekTotal.toLocaleString()+'<strong></td>'+
+                '<td><strong>'+lastMonthTotal.toLocaleString()+'<strong></td>'+
         '</tr>');
-      new Chart(makeCanvas('chart-4-container')).Doughnut(data);
-      generateLegend('legend-4-container', data);
     });
   }
 

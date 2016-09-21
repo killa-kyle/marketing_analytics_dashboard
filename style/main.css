@@ -1,9 +1,12 @@
+.boxshadow, .dash-element {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }
+
 body {
   background: #f4f4f4;
   width: 1920px;
   height: 1080px;
   border: 2px solid #2a5781;
-  font-family: proxima-nova, "proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  font-family: "Roboto","proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .channels-table {
   font-size: 2em; }
@@ -16,7 +19,8 @@ body {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  width: 100%; }
+  width: 100%;
+  height: 400px; }
   .active-users-container .ActiveUsers {
     width: 100%;
     display: -webkit-box;
@@ -36,12 +40,16 @@ body {
     -webkit-align-items: center;
         -ms-flex-align: center;
             align-items: center;
-    font-size: 2em; }
+    font-size: 4em; }
   .active-users-container .ActiveUsers-value {
     display: block; }
 
 .Chartjs, table {
   background: #fff; }
+
+.dash-element .dash-element-header {
+  margin: 0;
+  padding: 10px 0; }
 
 .Chartjs {
   border: 1px solid #eee; }
@@ -52,15 +60,59 @@ body {
   margin-bottom: 0.5em; }
 
 .thead-inverse th {
-  background: #2a5781 !important;
-  font-weight: 100;
-  font-size: 1em; }
+  color: #2a5781;
+  font-weight: 600;
+  font-size: 1.2em; }
   .thead-inverse th span {
     display: block;
     font-size: 0.5em; }
 
 .channel-row span {
   font-size: 0.7em;
-  font-weight: 600;
+  font-weight: 400;
   color: #2a5781;
   margin: 0 5px; }
+
+.this-week-date-header {
+  display: inline;
+  font-size: 0.8em; }
+  .this-week-date-header:before {
+    content: "("; }
+  .this-week-date-header:after {
+    content: ")"; }
+
+.list-group {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+
+header {
+  background: #1d3d5b;
+  color: #fff;
+  font-size: 2em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 2em;
+  height: 60px;
+  width: 100%;
+  margin-bottom: 1em;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  header .header-tei-logo {
+    width: 300px; }
+  header .header-text {
+    margin: 0; }
