@@ -47,11 +47,9 @@ body {
 .Chartjs, table {
   background: #fff; }
 
-.dash-element {
-  border: 1px solid #ccc; }
-  .dash-element .dash-element-header {
-    margin: 0;
-    padding: 10px 0; }
+.dash-element .dash-element-header {
+  margin: 0;
+  padding: 10px 0; }
 
 .Chartjs h3 {
   text-align: center;
@@ -75,18 +73,41 @@ body {
 
 .this-week-date-header {
   display: inline;
-  font-size: 0.8em; }
+  font-size: 0.6em;
+  background: #2a5781;
+  color: #fff;
+  font-weight: 400;
+  padding: 5px;
+  margin-left: 1em; }
   .this-week-date-header:before {
-    content: "("; }
+    content: "["; }
   .this-week-date-header:after {
-    content: ")"; }
+    content: "]"; }
+
+.dash-element {
+  background: #fff;
+  border: 1px solid #d4d2d0;
+  border-radius: 4px; }
+  .dash-element .dash-element-header {
+    background: #1d3d5b;
+    color: #fff;
+    border-radius: 4px 4px 0 0;
+    font-weight: 100; }
 
 .list-group {
-  padding: 0 20px;
-  height: 330px;
-  overflow: hidden; }
+  height: 334px;
+  overflow-y: scroll;
+  background: #fff; }
+  .list-group .list-group-item {
+    border-left: none;
+    border-right: none; }
+    .list-group .list-group-item:last-of-type {
+      border-bottom: none; }
   .list-group .list-group-item span {
     float: right;
+    position: absolute;
+    right: 10px;
+    top: 5px;
     font-weight: 700;
     color: #2a5781;
     font-size: 1.3em;
@@ -119,8 +140,9 @@ header {
     margin: 0; }
 
 .ActiveUsers {
-  background: #f4f2f1;
-  border: 1px solid #d4d2d0;
+  background: #1d3d5b;
+  background-size: cover;
+  color: #fff;
   border-radius: 4px;
   font-weight: 300;
   padding: .5em 1.5em;

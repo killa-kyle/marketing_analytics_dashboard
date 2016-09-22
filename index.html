@@ -19,19 +19,25 @@
 </header>
 
 <div class="container-fluid">
-    <table class="channels-table table table-striped table-bordered table-condensed dash-element" id="channels">    
-        <thead class="thead-inverse">
-            <tr>
-                <th>Channel</th>
-                <th>This Week <div class="this-week-date-header"></div> <span>(sessions | conversions | rate) </span></th>
-                <th>Last Week <span>(sessions | conversions | rate) </span></th>
-                <th>Last Month <span>(sessions | conversions | rate) </span></th>
-            </tr>
-        </thead>
-        <tbody>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="channels-table table table-striped table-bordered  dash-element" id="channels">    
+          <thead class="thead-inverse">
+              <tr>
+                  <th>Channel</th>
+                  <th>Today <span>(sessions | conversions | rate) </span></th>
+                  <th>This Week <div class="this-week-date-header"></div> <span>(sessions | conversions | rate) </span></th>
+                  <th>Last Week <span>(sessions | conversions | rate) </span></th>
+                  <th>Last Month <span>(sessions | conversions | rate) </span></th>
+              </tr>
+          </thead>
+          <tbody>
 
-        </tbody>
-    </table>
+          </tbody>
+      </table>
+    </div>
+
+  </div>
 </div>
 
 <div class="container-fluid">
@@ -40,13 +46,11 @@
             <div id="active-users-container" class="active-users-container dash-element"></div>
         </div>
         <div class="col-md-4">
-        
-            <div id="active-pages-container" class="dash-element">
-            <h3 class="text-center dash-element-header">Top Active Pages</h3>
-              <div class="list-group clearfix active-pages ">
-                
-              </div>
-            </div>
+        <div id="active-pages-container" class="dash-element">
+        <h3 class="text-center dash-element-header">Top Active Pages</h3>
+          <div class="list-group clearfix active-pages "></div>
+        </div>
+
         </div>
         <div class="col-md-4">
             

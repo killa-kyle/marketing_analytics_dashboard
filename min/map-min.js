@@ -40,8 +40,8 @@ var ACTIVE_USERS_MAP = (function(){
           var options = {
             colorAxis: {colors: ['#e7711b', '#2a5781']}, // orange to blue
             legend: 'none',    
-            // backgroundColor: {fill:'transparent',stroke:'#FFF' ,strokeWidth:0 },    
-            datalessRegionColor: '#f5f5f5',
+            backgroundColor: {fill:'transparent',stroke:'#bada55' ,strokeWidth:0 },    
+            datalessRegionColor: '#eee',
             displayMode: 'markers', 
             enableRegionInteractivity: 'true', 
             resolution: 'countries',

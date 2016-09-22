@@ -1,6 +1,7 @@
 $tei-primary: #2a5781;
 $tei-dark: #1d3d5b;
 $gray: rgb(221, 228, 233);
+$border: #d4d2d0;
 
 .boxshadow {
     // box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
@@ -48,7 +49,7 @@ body {
 
 .dash-element {
     // @extend .boxshadow;
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     .dash-element-header {
         margin: 0;
         padding: 10px 0;
@@ -85,21 +86,48 @@ body {
 
 .this-week-date-header {
     display: inline;
-    font-size: 0.8em;    
+    font-size: 0.6em;
+    background: $tei-primary;
+    color: #fff;
+    font-weight: 400;
+    padding: 5px;
+    margin-left: 1em;
+
     &:before {
-        content: "(";
+        content: "[";
     };
     &:after {
-        content: ")";
+        content: "]";
     }
 }
 
+.dash-element {
+    background: #fff;
+    border: 1px solid $border;
+    border-radius: 4px;
+    .dash-element-header {
+        background: $tei-dark;
+        color: #fff;
+        border-radius: 4px 4px 0 0;
+        font-weight: 100;
+    }
+}
 .list-group {
-    padding: 0 20px;
-    height: 330px;
-    overflow: hidden;
+    height: 334px;
+    overflow-y: scroll;
+    background: #fff;
+    .list-group-item {            
+        border-left: none;
+        border-right: none;  
+        &:last-of-type {
+            border-bottom: none;
+        }  
+    }
     .list-group-item span {
-        float: right;
+        float: right;        
+        position: absolute;
+        right: 10px;
+        top: 5px;
         font-weight: 700;
         color: $tei-primary;
         font-size: 1.3em;
@@ -110,7 +138,7 @@ body {
 
 header {
     @extend .boxshadow;
-    background: $tei-dark;
+    background: $tei-dark;    
     color: #fff;
     font-size: 2em;
     display: flex;
@@ -128,8 +156,10 @@ header {
     }
 }
 .ActiveUsers {
-    background: #f4f2f1;
-    border: 1px solid #d4d2d0;
+    background: $tei-dark;
+    // background-image: url("../img/duoTone-skyline-2.jpg");
+    background-size: cover;
+    color: #fff;    
     border-radius: 4px;
     font-weight: 300;
     padding: .5em 1.5em;
