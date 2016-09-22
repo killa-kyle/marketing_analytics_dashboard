@@ -13,8 +13,8 @@ $border: #d4d2d0;
 
 body {
     background: #f4f4f4;    
-    width: 1920px;
-    height: 1080px;
+    // width: 1920px;
+    // height: 1080px;
     border: 2px solid $tei-primary;
     font-family: "Roboto","proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -22,9 +22,6 @@ body {
     font-size: 2em;
 }
 
-.page-header {
-    border: none;    
-}
 .active-users-container {
     display: flex;
     width: 100%;
@@ -32,35 +29,17 @@ body {
 
     .ActiveUsers {
         width: 100%;
+        // height: 300px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 4em;
+        font-size: 5em;
     }
 
     .ActiveUsers-value {
         display: block;
     }
-}
-.Chartjs, table {
-    background: #fff;    
-}
-
-.dash-element {
-    // @extend .boxshadow;
-    // border: 1px solid #ccc;
-    .dash-element-header {
-        margin: 0;
-        padding: 10px 0;
-    }
-}
-
-
-.Chartjs h3 {
-    text-align: center;
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
 }
 
 .thead-inverse th{
@@ -70,11 +49,19 @@ body {
     span {
         display: block;
         font-size: 0.5em;
-        // font-weight: 100;
     }
 }
 
-.channel-row {    
+.channel-row {  
+    td:nth-child(1) {
+        // background: #fff !important;
+        // border: none;
+        color: $tei-primary;
+    } 
+    &:last-of-type {
+        background: $gray;
+        border: 2px solid $tei-primary;
+    } 
     span {
         font-size: 0.7em;
         font-weight: 400;
@@ -84,21 +71,15 @@ body {
     }
 }
 
-.this-week-date-header {
+.this-week-date-header,.last-week-date-header {
     display: inline;
     font-size: 0.6em;
     background: $tei-primary;
     color: #fff;
     font-weight: 400;
-    padding: 5px;
+    padding: 5px 15px;
+    border-radius: 10px;
     margin-left: 1em;
-
-    &:before {
-        content: "[";
-    };
-    &:after {
-        content: "]";
-    }
 }
 
 .dash-element {
@@ -110,6 +91,8 @@ body {
         color: #fff;
         border-radius: 4px 4px 0 0;
         font-weight: 100;
+        margin: 0;
+        padding: 10px 0;
     }
 }
 .list-group {

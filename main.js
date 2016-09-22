@@ -139,11 +139,10 @@ function compressArray(original) {
     activeUsers.set(data).execute();
 
     // Render all the of charts for this view.
-    // renderWeekOverWeekChart(data.ids);
-    // renderYearOverYearChart(data.ids);
-    // renderTopBrowsersChart(data.ids);
     renderTopChannelsTable(data.ids);
     getTopActivePages(data);
+
+
     setInterval(function(){
       getTopActivePages(data);
       // updateThisWeek(data.ids);
@@ -167,7 +166,8 @@ function compressArray(original) {
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
       'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
-      'sort': '-ga:sessions',
+      // 'sort': '-ga:sessions',
+      'sort': 'ga:channelGrouping',
       'start-date': moment(now).format('YYYY-MM-DD'),
       'end-date': moment(now).format('YYYY-MM-DD'),      
     });
@@ -176,7 +176,8 @@ function compressArray(original) {
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
       'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
-      'sort': '-ga:sessions',
+      // 'sort': '-ga:sessions',
+      'sort': 'ga:channelGrouping',
       'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
       'end-date': moment(now).format('YYYY-MM-DD'),      
     });
@@ -185,7 +186,8 @@ function compressArray(original) {
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
       'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
-      'sort': '-ga:sessions',
+      // 'sort': '-ga:sessions',
+      'sort': 'ga:channelGrouping',
       'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
           .format('YYYY-MM-DD'),
       'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
@@ -197,7 +199,8 @@ function compressArray(original) {
       'ids': ids,
       'dimensions': 'ga:channelGrouping',
       'metrics': 'ga:sessions,ga:goal1ConversionRate,ga:goal1Completions',
-      'sort': '-ga:sessions',
+      // 'sort': '-ga:sessions',
+      'sort': 'ga:channelGrouping',
       'start-date': moment(now).subtract(1,'months').startOf('month').format('YYYY-MM-DD'),
       'end-date': moment(now).subtract(1, 'months').endOf('month').format('YYYY-MM-DD'),
     });
@@ -210,13 +213,18 @@ function compressArray(original) {
       var lastMonthResults = results[2].rows.map(function(row){return row});
       var todayResults = results[3].rows.map(function(row){return row});
 
-      console.log(todayResults);
+      
 
       //update Date Header 
       $('.this-week-date-header').html(
         moment(results[0].query["start-date"]).format('MM/DD/YY')+
         ' - '+
         moment(results[0].query["end-date"]).format('MM/DD/YY')
+      );
+      $('.last-week-date-header').html(
+        moment(results[1].query["start-date"]).format('MM/DD/YY')+
+        ' - '+
+        moment(results[1].query["end-date"]).format('MM/DD/YY')
       );
 
       // console.log(thisWeekResults);
@@ -228,18 +236,26 @@ function compressArray(original) {
       tableResults[1] = lastWeekResults;
       tableResults[2] = lastMonthResults;
       tableResults[3] = todayResults;
-
+      console.log(thisWeekResults);
+      // initialize total variables
       var thisWeekTotal = 0;
+      var thisWeekTotalCompletions = 0;
+
       var lastWeekTotal = 0;
+      var lastWeekTotalCompletions = 0;
+
       var lastMonthTotal = 0;
+      var lastMonthTotalCompletions = 0;
+      
       var todayTotal = 0;
+      var todayTotalCompletions = 0; 
 
       
 
       for(var i = 0; i < tableResults[0].length; i++){
         
-        var channelName = tableResults[0][i][0];
-        
+        var channelName = tableResults[1][i][0];
+        console.log(channelName);
         var thisWeek = parseInt(tableResults[0][i][1]);
         var thisWeekRate = parseFloat(tableResults[0][i][2]).toFixed(2);        
         var thisWeekCompletions = parseInt(tableResults[0][i][3]);
@@ -258,9 +274,16 @@ function compressArray(original) {
 
         // add to total       
         thisWeekTotal = thisWeekTotal + thisWeek;
+        thisWeekTotalCompletions = thisWeekTotalCompletions + thisWeekCompletions;
+
         lastWeekTotal = lastWeekTotal + lastWeek;
+        lastWeekTotalCompletions = lastWeekTotalCompletions + lastWeekCompletions;
+
         lastMonthTotal = lastMonthTotal + lastMonth;        
+        lastMonthTotalCompletions = lastMonthTotalCompletions + lastMonthCompletions;
+
         todayTotal = todayTotal + today;  
+        todayTotalCompletions = todayTotalCompletions + todayCompletions;
 
         // build table;
         $('#channels').append('<tr class="channel-row">'+ 
@@ -275,12 +298,12 @@ function compressArray(original) {
      
      // build total row
       $('#channels').append(
-        '<tr>'+
+        '<tr class="channel-row">'+
                 '<td><strong>TOTAL:</strong></td>'+
-                '<td><strong>'+todayTotal.toLocaleString()+'<strong></td>'+
-                '<td><strong>'+thisWeekTotal.toLocaleString()+'<strong></td>'+
-                '<td><strong>'+lastWeekTotal.toLocaleString()+'<strong></td>'+
-                '<td><strong>'+lastMonthTotal.toLocaleString()+'<strong></td>'+
+                '<td><strong>'+todayTotal.toLocaleString()+'<strong><span> ('+todayTotalCompletions+')</span></td>'+
+                '<td><strong>'+thisWeekTotal.toLocaleString()+'<strong><span> ('+thisWeekTotalCompletions+')</span></td>'+
+                '<td><strong>'+lastWeekTotal.toLocaleString()+'<strong><span> ('+lastWeekTotalCompletions+')</span></td>'+
+                '<td><strong>'+lastMonthTotal.toLocaleString()+'<strong><span> ('+lastMonthTotalCompletions+')</span></td>'+
         '</tr>');
     });
   }

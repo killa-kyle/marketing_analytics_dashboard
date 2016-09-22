@@ -3,16 +3,11 @@
 
 body {
   background: #f4f4f4;
-  width: 1920px;
-  height: 1080px;
   border: 2px solid #2a5781;
   font-family: "Roboto","proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .channels-table {
   font-size: 2em; }
-
-.page-header {
-  border: none; }
 
 .active-users-container {
   display: -webkit-box;
@@ -40,21 +35,9 @@ body {
     -webkit-align-items: center;
         -ms-flex-align: center;
             align-items: center;
-    font-size: 4em; }
+    font-size: 5em; }
   .active-users-container .ActiveUsers-value {
     display: block; }
-
-.Chartjs, table {
-  background: #fff; }
-
-.dash-element .dash-element-header {
-  margin: 0;
-  padding: 10px 0; }
-
-.Chartjs h3 {
-  text-align: center;
-  font-size: 1.5em;
-  margin-bottom: 0.5em; }
 
 .thead-inverse th {
   color: #2a5781;
@@ -64,6 +47,11 @@ body {
     display: block;
     font-size: 0.5em; }
 
+.channel-row td:nth-child(1) {
+  color: #2a5781; }
+.channel-row:last-of-type {
+  background: #dde4e9;
+  border: 2px solid #2a5781; }
 .channel-row span {
   font-size: 0.7em;
   font-weight: 400;
@@ -71,18 +59,15 @@ body {
   color: #2a5781;
   margin: 0 5px; }
 
-.this-week-date-header {
+.this-week-date-header, .last-week-date-header {
   display: inline;
   font-size: 0.6em;
   background: #2a5781;
   color: #fff;
   font-weight: 400;
-  padding: 5px;
+  padding: 5px 15px;
+  border-radius: 10px;
   margin-left: 1em; }
-  .this-week-date-header:before {
-    content: "["; }
-  .this-week-date-header:after {
-    content: "]"; }
 
 .dash-element {
   background: #fff;
@@ -92,7 +77,9 @@ body {
     background: #1d3d5b;
     color: #fff;
     border-radius: 4px 4px 0 0;
-    font-weight: 100; }
+    font-weight: 100;
+    margin: 0;
+    padding: 10px 0; }
 
 .list-group {
   height: 334px;
