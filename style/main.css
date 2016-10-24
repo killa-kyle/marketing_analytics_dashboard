@@ -3,7 +3,8 @@
 
 body {
   background: #f4f4f4;
-  border: 2px solid #2a5781;
+  width: 1920px;
+  height: 1080px;
   font-family: "Roboto","proxima nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
 .channels-table {
@@ -168,3 +169,5 @@ header {
     background-color: #ffebeb;
     border-color: rgba(255, 0, 0, 0.5);
     color: red; } }
+
+/*# sourceMappingURL=main.css.map */
