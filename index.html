@@ -9,6 +9,14 @@
 
 
     <link rel="stylesheet" type="text/css" href="style/main.css">
+    <script>
+    (function(w,d,s,g,js,fs){
+      g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
+      js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
+      js.src='https://apis.google.com/js/platform.js';
+      fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
+    }(window,document,'script'));
+    </script>
 </head>
 <body>
 <header>
@@ -78,18 +86,7 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
-(function(w,d,s,g,js,fs){
-  g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
-  js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
-  js.src='https://apis.google.com/js/platform.js';
-  fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
-}(window,document,'script'));
-</script>
 
-<script type="text/javascript">
-
-    </script>
 
 <!-- This demo uses the Chart.js graphing library and Moment.js to do date
      formatting and manipulation. -->
